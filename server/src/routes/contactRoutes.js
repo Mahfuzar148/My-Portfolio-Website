@@ -8,12 +8,12 @@ const router = Router();
 
 const mailUser = process.env.SMTP_USER;
 const mailPass = process.env.SMTP_PASS;
-const mailHost = process.env.SMTP_HOST || "smtp.gmail.com";
+const mailHost = process.env.SMTP_HOST;
 const mailPort = Number(process.env.SMTP_PORT || 587);
 const mailRecipient = process.env.CONTACT_RECEIVER_EMAIL || "your-inbox@example.com";
 
 function createTransporter() {
-  if (!mailUser || !mailPass) {
+  if (!mailUser || !mailPass || !mailHost) {
     return null;
   }
 
@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
       return res.status(500).json({
         ok: false,
         message:
-          "Email service is not configured yet. Set SMTP_USER and SMTP_PASS in the server .env file.",
+          "Email service is not configured yet. Set SMTP_HOST, SMTP_USER and SMTP_PASS in the server .env file.",
       });
     }
 
@@ -84,7 +84,7 @@ router.post("/", async (req, res) => {
       ok: false,
       message:
         error?.code === "EAUTH"
-          ? "SMTP authentication failed. Check SMTP_USER and SMTP_PASS in the server .env file."
+          ? "SMTP authentication failed. Check SMTP_HOST, SMTP_USER and SMTP_PASS in the server .env file."
           : "Unable to send the message right now.",
     });
   }

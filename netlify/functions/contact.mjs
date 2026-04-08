@@ -6,11 +6,11 @@ const mailRecipient = process.env.CONTACT_RECEIVER_EMAIL || "your-inbox@example.
 const mailSender = process.env.CONTACT_SENDER_EMAIL || "Portfolio Contact <onboarding@resend.dev>";
 const mailUser = process.env.SMTP_USER;
 const mailPass = process.env.SMTP_PASS;
-const mailHost = process.env.SMTP_HOST || "smtp.gmail.com";
+const mailHost = process.env.SMTP_HOST;
 const mailPort = Number(process.env.SMTP_PORT || 587);
 
 function createTransporter() {
-  if (!mailUser || !mailPass) {
+  if (!mailUser || !mailPass || !mailHost) {
     return null;
   }
 
@@ -111,7 +111,7 @@ export const handler = async (event) => {
     if (mailProvider === "smtp" && !transporter) {
       return createResponse(500, {
         ok: false,
-        message: "SMTP is not configured. Set SMTP_USER and SMTP_PASS in Netlify environment variables.",
+        message: "SMTP is not configured. Set SMTP_HOST, SMTP_USER, and SMTP_PASS in Netlify environment variables.",
       });
     }
 
@@ -147,7 +147,7 @@ export const handler = async (event) => {
         ok: false,
         message:
           mailProvider === "smtp"
-            ? "SMTP is not configured. Set SMTP_USER and SMTP_PASS in Netlify environment variables."
+            ? "SMTP is not configured. Set SMTP_HOST, SMTP_USER, and SMTP_PASS in Netlify environment variables."
             : "Resend is not configured. Set RESEND_API_KEY in Netlify environment variables.",
       });
     }
@@ -161,7 +161,7 @@ export const handler = async (event) => {
       ok: false,
       message:
         mailProvider === "smtp" && error?.code === "EAUTH"
-          ? "SMTP authentication failed. Check SMTP_USER and SMTP_PASS."
+          ? "SMTP authentication failed. Check SMTP_HOST, SMTP_USER, and SMTP_PASS."
           : "Unable to send the message right now.",
     });
   }
