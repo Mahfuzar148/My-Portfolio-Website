@@ -10,7 +10,7 @@ const mailUser = process.env.SMTP_USER;
 const mailPass = process.env.SMTP_PASS;
 const mailHost = process.env.SMTP_HOST || "smtp.gmail.com";
 const mailPort = Number(process.env.SMTP_PORT || 587);
-const mailRecipient = process.env.CONTACT_RECEIVER_EMAIL || "mahfuzar148@gmail.com";
+const mailRecipient = process.env.CONTACT_RECEIVER_EMAIL || "your-inbox@example.com";
 
 function createTransporter() {
   if (!mailUser || !mailPass) {

@@ -1,3 +1,27 @@
+const contactEmail = String.fromCharCode(
+  109,
+  97,
+  104,
+  102,
+  117,
+  122,
+  97,
+  114,
+  49,
+  52,
+  56,
+  64,
+  103,
+  109,
+  97,
+  105,
+  108,
+  46,
+  99,
+  111,
+  109,
+);
+
 export const portfolioData = {
   hero: {
     name: "Md. Mahfuzar Rahman",
@@ -58,7 +82,7 @@ export const portfolioData = {
     },
   ],
   contact: {
-    email: "mahfuzar148@gmail.com",
+    email: contactEmail,
     phone: "01571319833",
     github: "https://github.com/Mahfuzar148",
     linkedin: "https://www.linkedin.com/in/md-mahfuzar-baa369262",

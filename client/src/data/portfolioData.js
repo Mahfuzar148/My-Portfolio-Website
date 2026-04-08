@@ -1,3 +1,27 @@
+const contactEmail = String.fromCharCode(
+  109,
+  97,
+  104,
+  102,
+  117,
+  122,
+  97,
+  114,
+  49,
+  52,
+  56,
+  64,
+  103,
+  109,
+  97,
+  105,
+  108,
+  46,
+  99,
+  111,
+  109,
+);
+
 export const skillAnalytics = [
   { label: "C / C++", value: 90, note: "Strong fundamentals and problem solving base" },
   { label: "Java", value: 75, note: "Solid OOP and application logic" },
@@ -111,7 +135,7 @@ export const timeline = [
 ];
 
 export const contactItems = [
-  { label: "Email", value: "mahfuzar148@gmail.com" },
+  { label: "Email", value: contactEmail },
   { label: "Phone", value: "01571319833" },
   { label: "GitHub", value: "github.com/Mahfuzar148" },
   { label: "LinkedIn", value: "linkedin.com/in/md-mahfuzar-baa369262" },
@@ -126,8 +150,8 @@ export const socialLinks = [
 export const contactChannels = [
   {
     label: "Email",
-    href: "mailto:mahfuzar148@gmail.com?subject=Portfolio%20Inquiry",
-    value: "mahfuzar148@gmail.com",
+    href: `mailto:${contactEmail}?subject=Portfolio%20Inquiry`,
+    value: contactEmail,
     type: "email",
     text: "Send a direct email",
   },

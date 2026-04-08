@@ -23,7 +23,7 @@ A professional portfolio website scaffold built with React, Node.js, Express, an
 
 ## Contact details used
 
-- Email: [mahfuzar148@gmail.com](mailto:mahfuzar148@gmail.com)
+- Email: [your-email@example.com](mailto:your-email@example.com)
 - GitHub: [github.com/Mahfuzar148](https://github.com/Mahfuzar148)
 - LinkedIn: [linkedin.com/in/md-mahfuzar-baa369262](https://www.linkedin.com/in/md-mahfuzar-baa369262)
 - Phone: 01571319833

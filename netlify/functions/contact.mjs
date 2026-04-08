@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const mailProvider = (process.env.MAIL_PROVIDER || (resendApiKey ? "resend" : "smtp")).toLowerCase();
-const mailRecipient = process.env.CONTACT_RECEIVER_EMAIL || "mahfuzar148@gmail.com";
+const mailRecipient = process.env.CONTACT_RECEIVER_EMAIL || "your-inbox@example.com";
 const mailSender = process.env.CONTACT_SENDER_EMAIL || "Portfolio Contact <onboarding@resend.dev>";
 const mailUser = process.env.SMTP_USER;
 const mailPass = process.env.SMTP_PASS;

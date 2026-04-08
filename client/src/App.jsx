@@ -30,6 +30,8 @@ const fallbackContactEndpoints = Array.from(
   ].filter(Boolean)),
 );
 
+const contactEmail = contactItems.find((item) => item.label === "Email")?.value || "your-inbox@example.com";
+
 function App() {
   const [formData, setFormData] = useState(initialFormState);
   const { toast, showToast } = useToast();
@@ -65,7 +67,7 @@ function App() {
           const result = await response.json().catch(() => ({}));
 
           if (response.ok && result.ok) {
-            showToast("Message sent", "Your message was sent to mahfuzar148@gmail.com.", "success");
+            showToast("Message sent", `Your message was sent to ${contactEmail}.`, "success");
             setFormData(initialFormState);
             return;
           }
