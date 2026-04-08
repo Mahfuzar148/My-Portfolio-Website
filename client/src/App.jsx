@@ -26,7 +26,6 @@ const fallbackContactEndpoints = Array.from(
   new Set([
     configuredContactEndpoint,
     ...(import.meta.env.DEV ? localContactEndpoints : ["/.netlify/functions/contact"]),
-    ...(import.meta.env.DEV ? ["/.netlify/functions/contact"] : localContactEndpoints),
   ].filter(Boolean)),
 );
 
@@ -79,10 +78,11 @@ function App() {
       }
 
       throw new Error(lastError || "Submission failed");
-    } catch (_error) {
+    } catch (error) {
+      const message = error?.message || "Unable to send the message right now.";
       showToast(
         "Submit failed",
-        "Unable to send the message right now. Check SMTP settings, the Netlify Function, and the local server.",
+        message,
         "error",
       );
     }
