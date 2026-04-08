@@ -50,7 +50,9 @@ If you want to add a new skill, edit `client/src/data/portfolioData.js` and add 
 
 The contact form sends messages through the Express API in local development or the Netlify Function in deployment.
 
-After the site is deployed, set `SMTP_USER`, `SMTP_PASS`, `SMTP_HOST`, and `SMTP_PORT` in the server or Netlify environment so messages are delivered directly by email.
+For a free deploy-friendly setup, use `RESEND_API_KEY` in Netlify and keep `CONTACT_RECEIVER_EMAIL` set to your inbox. The function will use Resend automatically when the key is present.
+
+If you prefer SMTP, set `SMTP_USER`, `SMTP_PASS`, `SMTP_HOST`, and `SMTP_PORT` instead. The function will fall back to SMTP when Resend is not configured.
 
 ## Backend API
 
@@ -60,9 +62,9 @@ After the site is deployed, set `SMTP_USER`, `SMTP_PASS`, `SMTP_HOST`, and `SMTP
 
 ## Email setup
 
-The contact form sends messages to your email using SMTP when `SMTP_USER` and `SMTP_PASS` are set in your server `.env` file. If SMTP is not configured, the submission fails with an error message.
+The contact form can send messages using Resend or SMTP. In Netlify, Resend is the simplest free option because the function can call it directly without keeping a server running.
 
-If you want to use Gmail, create an App Password and use that in `SMTP_PASS`.
+If you want to use Gmail SMTP, create an App Password and use that in `SMTP_PASS`.
 
 ## Design direction
 
