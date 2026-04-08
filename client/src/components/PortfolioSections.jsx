@@ -2,7 +2,8 @@ import SectionHeading from "./SectionHeading.jsx";
 import { ContactIcon } from "./Icons.jsx";
 
 function PortfolioSections({
-  skills,
+  skillAnalytics,
+  skillFocus,
   achievements,
   workflow,
   services,
@@ -20,25 +21,21 @@ function PortfolioSections({
       <section className="content-block" id="about">
         <SectionHeading
           eyebrow="About"
-          title="A focused student with practical full-stack direction"
-          description="The page is now arranged like a personal dashboard, with a permanent sidebar and content cards that are easy to scan on desktop and mobile."
+          title="A focused CSE student building toward AI roles"
+          description="The page now highlights your current semester, skills, and long-term goal of working in AI, Generative AI, and data science."
         />
         <div className="about-grid">
           <article className="glass-card">
             <h3>Academic background</h3>
-            <p>University of Rajshahi, Computer Science and Engineering, final semester / 8th semester.</p>
+            <p>University of Rajshahi, Department of Computer Science and Engineering, 8th semester.</p>
           </article>
           <article className="glass-card">
-            <h3>Design direction</h3>
-            <p>
-              Dark, premium, and content-first. The layout uses strong contrast, elegant spacing, and crisp section cards.
-            </p>
+            <h3>Technical direction</h3>
+            <p>Learning C, C++, Java, JavaScript, Python, PHP, Django, Laravel, Flutter, ML, and DL.</p>
           </article>
           <article className="glass-card">
-            <h3>What this site does</h3>
-            <p>
-              Showcases your introduction, skills, project highlights, experience timeline, and contact details with a polished structure.
-            </p>
+            <h3>Career direction</h3>
+            <p>Targeting AI, Generative AI, data science, LLMs, and NLP while continuing to build real projects.</p>
           </article>
         </div>
       </section>
@@ -46,15 +43,55 @@ function PortfolioSections({
       <section className="content-block" id="skills">
         <SectionHeading
           eyebrow="Skills"
-          title="A balanced stack for frontend, backend, and presentation"
-          description="Skills are presented as compact chips so the area stays clean while still making your technical range easy to scan."
+          title="Skill analytics with current strength, learning, and future goals"
+          description="This section shows a visual snapshot of where you are strongest now, what you are learning, and the path you want to grow into."
         />
-        <div className="skill-grid">
-          {skills.map((skill) => (
-            <span key={skill} className="skill-pill">
-              {skill}
-            </span>
-          ))}
+        <div className="skill-layout">
+          <div className="skill-chart-card glass-card">
+            <div className="skill-chart-header">
+              <div>
+                <h3>Strength overview</h3>
+                <p>Percentages are self-assessed to give a quick visual reading of your current level.</p>
+              </div>
+              <span className="skill-chart-badge">Analytics</span>
+            </div>
+            <div className="skill-chart-list">
+              {skillAnalytics.map((item) => (
+                <div className="skill-chart-row" key={item.label}>
+                  <div className="skill-chart-topline">
+                    <strong>{item.label}</strong>
+                    <span>{item.value}%</span>
+                  </div>
+                  <div className="skill-bar-track" aria-hidden="true">
+                    <span className="skill-bar-fill" style={{ width: `${item.value}%` }} />
+                  </div>
+                  <p>{item.note}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="skill-focus-grid">
+            <article className="glass-card skill-focus-card">
+              <h3>Now learning</h3>
+              <p>These are the areas I am focusing on at the moment.</p>
+              <div className="skill-focus-tags">
+                {skillFocus.learningNow.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+            </article>
+
+            <article className="glass-card skill-focus-card">
+              <h3>Future goal</h3>
+              <p>These are the directions I want to build my career toward.</p>
+              <div className="skill-focus-tags future">
+                {skillFocus.futureGoal.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -168,11 +205,11 @@ function PortfolioSections({
           </div>
           <div>
             <h3>Current status</h3>
-            <p>Final semester / 8th semester</p>
+            <p>8th semester</p>
           </div>
           <div>
             <h3>Focus</h3>
-            <p>Full-stack development, UI implementation, and database-backed applications</p>
+            <p>Programming, algorithms, machine learning, deep learning, and AI career preparation</p>
           </div>
         </div>
       </section>

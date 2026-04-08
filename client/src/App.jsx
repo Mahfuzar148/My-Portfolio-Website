@@ -12,7 +12,8 @@ import {
   navigationItems,
   projects,
   services,
-  skills,
+  skillAnalytics,
+  skillFocus,
   socialLinks,
   timeline,
   workflow,
@@ -80,7 +81,8 @@ function App() {
         <HeroBanner />
 
         <PortfolioSections
-          skills={skills}
+          skillAnalytics={skillAnalytics}
+          skillFocus={skillFocus}
           achievements={achievements}
           workflow={workflow}
           services={services}

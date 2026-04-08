@@ -10,7 +10,7 @@ function Sidebar({ navigationItems, socialLinks }) {
           </div>
           <div className="sidebar-copy">
             <h1>Md. Mahfuzar Rahman</h1>
-            <p>Computer Science and Engineering student at University of Rajshahi.</p>
+            <p>8th semester Computer Science and Engineering student at the University of Rajshahi.</p>
           </div>
         </div>
 
@@ -41,15 +41,15 @@ function Sidebar({ navigationItems, socialLinks }) {
 
         <div className="sidebar-highlight">
           <span className="sidebar-highlight-label">Now focusing on</span>
-          <strong>Sidebar-driven UI, polished sections, and responsive presentation.</strong>
+          <strong>Machine Learning, Deep Learning, Generative AI, data science, and practical problem solving.</strong>
           <div className="sidebar-stats">
             <div>
-              <strong>3+</strong>
-              <span>Projects</span>
+              <strong>CSE</strong>
+              <span>Background</span>
             </div>
             <div>
-              <strong>6</strong>
-              <span>Tech areas</span>
+              <strong>AI</strong>
+              <span>Career goal</span>
             </div>
           </div>
         </div>

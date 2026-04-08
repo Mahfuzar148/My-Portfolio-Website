@@ -1,48 +1,51 @@
-export const skills = [
-  "HTML5",
-  "CSS3",
-  "Bootstrap",
-  "Tailwind CSS",
-  "JavaScript",
-  "React",
-  "Node.js",
-  "Express",
-  "MySQL",
-  "REST APIs",
-  "Responsive Design",
-  "Git",
+export const skillAnalytics = [
+  { label: "C / C++", value: 90, note: "Strong fundamentals and problem solving base" },
+  { label: "Java", value: 75, note: "Solid OOP and application logic" },
+  { label: "JavaScript", value: 72, note: "Frontend logic and interactive UI work" },
+  { label: "Python", value: 70, note: "Core language for AI and scripting" },
+  { label: "PHP", value: 60, note: "Backend basics and web applications" },
+  { label: "Django", value: 58, note: "Backend framework with Python" },
+  { label: "Laravel", value: 55, note: "PHP framework fundamentals" },
+  { label: "Flutter", value: 50, note: "Mobile app development at a medium level" },
+  { label: "Machine Learning", value: 42, note: "Currently learning models and workflows" },
+  { label: "Deep Learning", value: 35, note: "Building a stronger foundation step by step" },
 ];
+
+export const skillFocus = {
+  learningNow: ["Machine Learning", "Deep Learning", "NLP basics", "LLM fundamentals"],
+  futureGoal: ["AI Engineer", "Generative AI", "Data Science", "LLM / NLP focused development"],
+};
 
 export const achievements = [
   {
-    title: "Final-semester Computer Science student",
-    text: "University of Rajshahi with a focus on practical software and web development.",
+    title: "University of Rajshahi student",
+    text: "8th semester Computer Science and Engineering student building a strong technical foundation.",
   },
   {
-    title: "Full-stack direction",
-    text: "Building with React, Node.js, Express, and MySQL for production-style web apps.",
+    title: "AI-focused direction",
+    text: "Learning Machine Learning, Deep Learning, and the foundations behind AI, Generative AI, and LLMs.",
   },
   {
-    title: "Responsive UI mindset",
-    text: "Designing for mobile-first layouts, readable hierarchy, and strong presentation.",
+    title: "Adaptive learner",
+    text: "Enjoy exploring new technology, learning new stacks, and adapting quickly to fresh tools and workflows.",
   },
 ];
 
 export const workflow = [
   {
     step: "01",
-    title: "Discover",
-    text: "Understand goals, content, and the audience before building the visual structure.",
+    title: "Learn",
+    text: "Build a clear base in programming, algorithms, and data structures before moving into advanced topics.",
   },
   {
     step: "02",
-    title: "Design",
-    text: "Create a clean layout, section system, and visual hierarchy that feels modern.",
+    title: "Practice",
+    text: "Solve problems, write projects, and strengthen understanding through hands-on coding.",
   },
   {
     step: "03",
-    title: "Develop",
-    text: "Implement reusable components, responsive spacing, and backend integration.",
+    title: "Grow",
+    text: "Move deeper into AI, Generative AI, data science, NLP, and real-world application building.",
   },
 ];
 
@@ -81,32 +84,29 @@ export const projects = [
 
 export const services = [
   {
-    title: "Responsive Website Design",
-    description:
-      "Clean, mobile-first layouts that look polished on desktop, tablet, and phone.",
+    title: "Programming Foundations",
+    description: "Strong fundamentals in C, C++, Java, JavaScript, Python, and core CS concepts.",
   },
   {
-    title: "React Frontend Development",
-    description:
-      "Modern component-based interfaces with smooth structure, reuse, and scalability.",
+    title: "Web Development Basics",
+    description: "Practical experience with PHP, Django, Laravel, and Flutter at a growing level.",
   },
   {
-    title: "Node.js + MySQL Backend",
-    description:
-      "API-driven applications with structured data flow, validation, and persistence.",
+    title: "AI Learning Path",
+    description: "Currently focused on Machine Learning, Deep Learning, LLMs, NLP, and data science.",
   },
 ];
 
 export const timeline = [
   {
     year: "Current",
-    title: "Final Semester at University of Rajshahi",
-    text: "Focused on Computer Science and Engineering while building practical full-stack web projects.",
+    title: "8th semester at University of Rajshahi",
+    text: "Studying Computer Science and Engineering while sharpening problem solving and project skills.",
   },
   {
     year: "Now",
-    title: "Portfolio and project development",
-    text: "Improving design, coding, and presentation skills for professional opportunities.",
+    title: "Learning AI and advanced development",
+    text: "Exploring Machine Learning, Deep Learning, Generative AI, NLP, and data science workflows.",
   },
 ];
 

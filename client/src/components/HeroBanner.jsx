@@ -2,11 +2,12 @@ function HeroBanner() {
   return (
     <header className="hero-banner" id="home">
       <div className="hero-copy">
-        <p className="eyebrow">Portfolio / Dashboard Style</p>
-        <h2>A premium sidebar layout for a clean personal portfolio.</h2>
+        <p className="eyebrow">Portfolio / Profile Overview</p>
+        <h2>Building toward AI, Generative AI, and data science.</h2>
         <p className="lead-copy">
-          This version keeps your information in a strong left sidebar, while the main area uses elegant cards,
-          previews, and clear spacing so every section feels intentional.
+          I am a Computer Science and Engineering student at the University of Rajshahi, now in my 8th semester.
+          I work with programming, problem solving, and modern web development while learning Machine Learning and
+          Deep Learning.
         </p>
         <div className="hero-actions">
           <a href="#projects" className="btn btn-primary hero-btn">
@@ -19,27 +20,31 @@ function HeroBanner() {
       </div>
 
       <div className="hero-panel-card">
+        <div className="hero-photo-shell">
+          <img src="/images/mahfuz.png" alt="Md. Mahfuzar Rahman" />
+        </div>
         <p className="card-label">Profile Snapshot</p>
-        <h3>University of Rajshahi</h3>
+        <h3>Md. Mahfuzar Rahman</h3>
         <p>
-          Final semester student with interest in frontend design, backend APIs, and database-backed web apps.
+          Student of the University of Rajshahi, Department of Computer Science and Engineering, currently in 8th
+          semester.
         </p>
         <div className="hero-mini-grid">
           <div>
-            <strong>Focused</strong>
-            <span>Responsive layouts</span>
+            <strong>Learning</strong>
+            <span>Machine Learning & Deep Learning</span>
           </div>
           <div>
-            <strong>Built for</strong>
-            <span>Clients & recruiters</span>
+            <strong>Goal</strong>
+            <span>AI / Generative AI / Data Science</span>
           </div>
           <div>
-            <strong>Style</strong>
-            <span>Dark glass UI</span>
+            <strong>Strength</strong>
+            <span>Algorithms & Data Structures</span>
           </div>
           <div>
-            <strong>Stack</strong>
-            <span>React + Node</span>
+            <strong>Tools</strong>
+            <span>C, C++, Java, Python, PHP, Django, Laravel, Flutter</span>
           </div>
         </div>
       </div>
