@@ -1000,6 +1000,14 @@ button {
     font-size: 0.92rem;
   }
 
+  .contact-layout {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+
+  .contact-form {
+    margin-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+
   .mobile-contact-bar {
     position: fixed;
     left: 50%;
