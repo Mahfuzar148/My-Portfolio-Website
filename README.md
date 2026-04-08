@@ -46,6 +46,12 @@ A professional portfolio website scaffold built with React, Node.js, Express, an
 
 If you want to add a new skill, edit `client/src/data/portfolioData.js` and add the new entry to the `skills` array. After you push the change to GitHub, Netlify will rebuild the site and the update will appear on the live portfolio.
 
+## Contact form on Netlify
+
+The contact form is configured for Netlify Forms in the frontend, so submitted messages will be captured by the live site without needing the Express backend.
+
+After the site is deployed, open the Netlify dashboard and add a form notification so new submissions are emailed to `mahfuzar148@gmail.com`.
+
 ## Backend API
 
 - `GET /health`

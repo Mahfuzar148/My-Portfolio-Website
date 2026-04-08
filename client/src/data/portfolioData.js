@@ -169,14 +169,3 @@ export const initialFormState = {
   subject: "",
   message: "",
 };
-
-export const contactEmailRecipient = "mahfuzar148@gmail.com";
-
-export function buildMailtoLink({ name, email, subject, message }) {
-  const mailSubject = encodeURIComponent(subject?.trim() || "Portfolio Inquiry");
-  const mailBody = encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\n\n${message}`,
-  );
-
-  return `mailto:${contactEmailRecipient}?subject=${mailSubject}&body=${mailBody}`;
-}

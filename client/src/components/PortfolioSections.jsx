@@ -12,9 +12,8 @@ function PortfolioSections({
   contactChannels,
   formData,
   onChange,
-  mailtoLink,
+  onSubmit,
   onCopy,
-  onSend,
 }) {
   return (
     <div className="main-panel">
@@ -223,7 +222,20 @@ function PortfolioSections({
             </div>
           </div>
 
-          <form className="contact-form">
+          <form
+            className="contact-form"
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            onSubmit={onSubmit}
+          >
+            <input type="hidden" name="form-name" value="contact" />
+            <p className="visually-hidden" aria-hidden="true">
+              <label>
+                Don’t fill this out: <input name="bot-field" />
+              </label>
+            </p>
             <div className="form-row">
               <label htmlFor="name">Name</label>
               <input id="name" name="name" value={formData.name} onChange={onChange} required />
@@ -240,13 +252,9 @@ function PortfolioSections({
               <label htmlFor="message">Message</label>
               <textarea id="message" name="message" rows="5" value={formData.message} onChange={onChange} required />
             </div>
-            <a
-              href={mailtoLink}
-              className="btn btn-primary hero-btn"
-              onClick={() => onSend()}
-            >
+            <button type="submit" className="btn btn-primary hero-btn">
               Send Message
-            </a>
+            </button>
           </form>
         </div>
       </section>

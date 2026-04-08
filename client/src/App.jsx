@@ -6,7 +6,6 @@ import { ContactIcon } from "./components/Icons.jsx";
 import useToast from "./hooks/useToast.js";
 import {
   achievements,
-  buildMailtoLink,
   contactChannels,
   contactItems,
   initialFormState,
@@ -23,8 +22,6 @@ function App() {
   const [formData, setFormData] = useState(initialFormState);
   const { toast, showToast } = useToast();
 
-  const mailtoLink = buildMailtoLink(formData);
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((current) => ({ ...current, [name]: value }));
@@ -39,13 +36,37 @@ function App() {
     }
   };
 
-  const handleSend = () => {
-    showToast(
-      "Open mail app",
-      "Your email app is opening with the message prefilled. Send it from there.",
-      "success",
-    );
-    setFormData(initialFormState);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const body = new URLSearchParams({
+        "form-name": "contact",
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      }).toString();
+
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+
+      showToast("Message sent", "Your message was submitted to Netlify Forms.", "success");
+      setFormData(initialFormState);
+    } catch (_error) {
+      showToast(
+        "Submit failed",
+        "Unable to submit the form right now. Check the connection or Netlify form settings.",
+        "error",
+      );
+    }
   };
 
   return (
@@ -69,9 +90,8 @@ function App() {
           contactChannels={contactChannels}
           formData={formData}
           onChange={handleChange}
-          mailtoLink={mailtoLink}
+          onSubmit={handleSubmit}
           onCopy={handleCopy}
-          onSend={handleSend}
         />
 
         <footer className="footer">
