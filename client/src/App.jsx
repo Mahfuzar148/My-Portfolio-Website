@@ -19,6 +19,17 @@ import {
   workflow,
 } from "./data/portfolioData.js";
 
+const configuredContactEndpoint = import.meta.env.VITE_CONTACT_API_URL?.trim();
+const localContactEndpoints = Array.from({ length: 11 }, (_value, index) => `http://localhost:${5000 + index}/api/contact`);
+
+const fallbackContactEndpoints = Array.from(
+  new Set([
+    configuredContactEndpoint,
+    ...(import.meta.env.DEV ? localContactEndpoints : ["/.netlify/functions/contact"]),
+    ...(import.meta.env.DEV ? ["/.netlify/functions/contact"] : localContactEndpoints),
+  ].filter(Boolean)),
+);
+
 function App() {
   const [formData, setFormData] = useState(initialFormState);
   const { toast, showToast } = useToast();
@@ -41,30 +52,35 @@ function App() {
     event.preventDefault();
 
     try {
-      const body = new URLSearchParams({
-        "form-name": "contact",
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-      }).toString();
+      let lastError = null;
 
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body,
-      });
+      for (const endpoint of fallbackContactEndpoints) {
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
 
-      if (!response.ok) {
-        throw new Error("Submission failed");
+          const result = await response.json().catch(() => ({}));
+
+          if (response.ok && result.ok) {
+            showToast("Message sent", "Your message was sent to mahfuzar148@gmail.com.", "success");
+            setFormData(initialFormState);
+            return;
+          }
+
+          lastError = result?.message || `Request failed at ${endpoint}`;
+        } catch (error) {
+          lastError = error?.message || `Network error at ${endpoint}`;
+        }
       }
 
-      showToast("Message sent", "Your message was submitted to Netlify Forms.", "success");
-      setFormData(initialFormState);
+      throw new Error(lastError || "Submission failed");
     } catch (_error) {
       showToast(
         "Submit failed",
-        "Unable to submit the form right now. Check the connection or Netlify form settings.",
+        "Unable to send the message right now. Check SMTP settings, the Netlify Function, and the local server.",
         "error",
       );
     }
