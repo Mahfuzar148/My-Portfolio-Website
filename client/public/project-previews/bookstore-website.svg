@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Bookstore Website preview">
+  <defs>
+    <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g2)"/>
+  <rect x="60" y="60" width="1080" height="680" rx="30" fill="#07111f" stroke="#38bdf8" stroke-opacity="0.28"/>
+  <rect x="100" y="110" width="1000" height="70" rx="18" fill="#0f172a"/>
+  <rect x="100" y="210" width="300" height="520" rx="24" fill="#0f172a"/>
+  <rect x="430" y="210" width="670" height="240" rx="24" fill="#115e59" fill-opacity="0.56"/>
+  <rect x="430" y="480" width="210" height="250" rx="24" fill="#0f172a"/>
+  <rect x="660" y="480" width="210" height="250" rx="24" fill="#0f172a"/>
+  <rect x="890" y="480" width="210" height="250" rx="24" fill="#0f172a"/>
+  <text x="120" y="155" fill="#e5eefb" font-family="Arial, sans-serif" font-size="28" font-weight="700">Bookstore Website</text>
+  <text x="470" y="290" fill="#e5eefb" font-family="Arial, sans-serif" font-size="30" font-weight="700">Editorial style storefront</text>
+  <text x="470" y="338" fill="#d1fae5" font-family="Arial, sans-serif" font-size="18">Responsive sections, strong product hierarchy, and polished presentation</text>
+</svg>
