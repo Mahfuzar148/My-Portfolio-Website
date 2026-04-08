@@ -218,7 +218,7 @@ function PortfolioSections({
         <SectionHeading
           eyebrow="Contact"
           title="Make it easy to reach you"
-          description="Contact details are displayed clearly so recruiters, clients, or collaborators can connect quickly. The form sends messages through your mail app when SMTP is not configured."
+          description="Contact details are displayed clearly so recruiters, clients, or collaborators can connect quickly. The form sends messages through SMTP and lands in your email inbox."
         />
         <div className="contact-layout">
           <div className="contact-panel">
@@ -261,18 +261,8 @@ function PortfolioSections({
 
           <form
             className="contact-form"
-            name="contact"
-            method="POST"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
             onSubmit={onSubmit}
           >
-            <input type="hidden" name="form-name" value="contact" />
-            <p className="visually-hidden" aria-hidden="true">
-              <label>
-                Don’t fill this out: <input name="bot-field" />
-              </label>
-            </p>
             <div className="form-row">
               <label htmlFor="name">Name</label>
               <input id="name" name="name" value={formData.name} onChange={onChange} required />

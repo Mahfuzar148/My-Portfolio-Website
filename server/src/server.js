@@ -1,10 +1,15 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import portfolioRoutes from "./routes/portfolioRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 
-dotenv.config();
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = path.dirname(currentFilePath);
+
+dotenv.config({ path: path.resolve(currentDirPath, "../.env") });
 
 const app = express();
 const port = process.env.PORT || 5000;

@@ -48,9 +48,9 @@ If you want to add a new skill, edit `client/src/data/portfolioData.js` and add 
 
 ## Contact form on Netlify
 
-The contact form is configured for Netlify Forms in the frontend, so submitted messages will be captured by the live site without needing the Express backend.
+The contact form sends messages through the Express API in local development or the Netlify Function in deployment.
 
-After the site is deployed, open the Netlify dashboard and add a form notification so new submissions are emailed to `mahfuzar148@gmail.com`.
+After the site is deployed, set `SMTP_USER`, `SMTP_PASS`, `SMTP_HOST`, and `SMTP_PORT` in the server or Netlify environment so messages are delivered directly by email.
 
 ## Backend API
 
@@ -60,7 +60,7 @@ After the site is deployed, open the Netlify dashboard and add a form notificati
 
 ## Email setup
 
-The contact form sends messages to your email using SMTP when `SMTP_USER` and `SMTP_PASS` are set in your server `.env` file. If SMTP is not configured, the browser opens your mail app with the message prefilled.
+The contact form sends messages to your email using SMTP when `SMTP_USER` and `SMTP_PASS` are set in your server `.env` file. If SMTP is not configured, the submission fails with an error message.
 
 If you want to use Gmail, create an App Password and use that in `SMTP_PASS`.
 
