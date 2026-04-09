@@ -20,8 +20,10 @@ function PortfolioSections({
   onSubmit,
   onCopy,
 }) {
-  const liveCodingProfiles = codingProfiles.filter((profile) => profile.status === "live");
-  const activeProfile = liveCodingProfiles.find((profile) => profile.platform === activeCodingPlatform) || liveCodingProfiles[0];
+  const visibleCodingProfiles = codingProfiles.filter(
+    (profile) => profile.status === "live" || profile.platform === "LeetCode",
+  );
+  const activeProfile = visibleCodingProfiles.find((profile) => profile.platform === activeCodingPlatform) || visibleCodingProfiles[0];
 
   const ratingGraph = activeProfile?.recentRatings || [];
 
@@ -128,8 +130,16 @@ function PortfolioSections({
               <h3>Platform pages</h3>
               <p>Showing only live public data. Unavailable platforms stay hidden.</p>
               <div className="coding-section-meta">
-                <span className={`coding-section-status ${codingAnalyticsState?.status === "live" ? "live" : "loading"}`}>
-                  {codingAnalyticsState?.status === "live" ? "Live" : "Loading"}
+                <span
+                  className={`coding-section-status ${
+                    codingAnalyticsState?.status === "live" ? "live" : codingAnalyticsState?.status === "partial" ? "partial" : "loading"
+                  }`}
+                >
+                  {codingAnalyticsState?.status === "live"
+                    ? "Live"
+                    : codingAnalyticsState?.status === "partial"
+                      ? "Partial"
+                      : "Loading"}
                 </span>
                 {codingAnalyticsState?.updatedAt ? (
                   <small>Last sync: {new Date(codingAnalyticsState.updatedAt).toLocaleString()}</small>
@@ -138,7 +148,7 @@ function PortfolioSections({
             </div>
 
             <div className="coding-tab-list">
-              {liveCodingProfiles.map((profile) => {
+              {visibleCodingProfiles.map((profile) => {
                 const isActive = profile.platform === activeProfile?.platform;
 
                 return (
@@ -168,7 +178,9 @@ function PortfolioSections({
                 <div className="coding-page-title">
                   <div className="coding-profile-topline">
                     <span className="coding-profile-platform">{activeProfile.platform}</span>
-                    <span className={`coding-profile-status ${activeProfile.status}`}>Live</span>
+                    <span className={`coding-profile-status ${activeProfile.status}`}>
+                      {activeProfile.status === "live" ? "Live" : "Limited"}
+                    </span>
                   </div>
                   <h3>{activeProfile.username}</h3>
                   <p>{activeProfile.description}</p>
