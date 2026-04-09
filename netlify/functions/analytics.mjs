@@ -147,6 +147,89 @@ function baseLimits(values) {
   return values.map((item) => ({ label: item }));
 }
 
+function countActiveDays(submissionCalendar) {
+  return Object.values(submissionCalendar || {}).filter((value) => Number(value) > 0).length;
+}
+
+function getLeetCodeFromStatsApi(data) {
+  if (!data || data.status !== "success") {
+    return null;
+  }
+
+  const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
+
+  return {
+    ...profiles.leetcode,
+    status: "live",
+    note: "Updated from LeetCode Stats API, which is more stable than the previous source.",
+    limits: baseLimits([
+      "Easy / medium / hard solved split is public.",
+      "Topic-wise solved breakdown is not exposed by this API.",
+    ]),
+    breakdown: [
+      { label: "Easy", value: formatNumber(data?.easySolved) },
+      { label: "Medium", value: formatNumber(data?.mediumSolved) },
+      { label: "Hard", value: formatNumber(data?.hardSolved) },
+    ],
+    metrics: [
+      { label: "Solved", value: formatNumber(data?.totalSolved) },
+      { label: "Acceptance", value: data?.acceptanceRate != null ? formatPercent(data.acceptanceRate) : "—" },
+      { label: "Active days", value: formatNumber(countActiveDays(submissionCalendar)) },
+      { label: "Rank", value: formatNumber(data?.ranking) },
+    ],
+  };
+}
+
+async function fetchLeetCodeProfileFromSources() {
+  const sources = [
+    "https://leetcode-stats-api.herokuapp.com/Mahfuzar148",
+    "https://leetcode-api-faisalshohag.vercel.app/Mahfuzar148",
+  ];
+
+  let lastError = null;
+
+  for (const source of sources) {
+    try {
+      const data = await fetchJson(source);
+
+      if (source.includes("leetcode-stats-api")) {
+        const profile = getLeetCodeFromStatsApi(data);
+
+        if (profile) {
+          return profile;
+        }
+      }
+
+      const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
+
+      return {
+        ...profiles.leetcode,
+        status: "live",
+        note: "Updated from a fallback LeetCode public API.",
+        limits: baseLimits([
+          "Easy / medium / hard solved split is public.",
+          "Topic-wise solved breakdown is not exposed by this fallback API.",
+        ]),
+        breakdown: [
+          { label: "Easy", value: formatNumber(data?.easySolved) },
+          { label: "Medium", value: formatNumber(data?.mediumSolved) },
+          { label: "Hard", value: formatNumber(data?.hardSolved) },
+        ],
+        metrics: [
+          { label: "Solved", value: formatNumber(data?.totalSolved) },
+          { label: "Acceptance", value: "—" },
+          { label: "Active days", value: formatNumber(countActiveDays(submissionCalendar)) },
+          { label: "Rank", value: formatNumber(data?.ranking) },
+        ],
+      };
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Unable to load LeetCode data.");
+}
+
 async function fetchGitHubProfile() {
   try {
     const [data, languages] = await Promise.all([
@@ -217,38 +300,7 @@ async function fetchCodeforcesProfile() {
 
 async function fetchLeetCodeProfile() {
   try {
-    const rawHtml = await fetchText("https://leetcode.com/u/Mahfuzar148/");
-    const text = collapseHtml(rawHtml);
-
-    const solvedMatch = text.match(/(\d+)\/\d+\s+Solved/i);
-    const acceptanceMatch = text.match(/([\d.]+)%\s+Acceptance/i);
-    const rankMatch = text.match(/Rank\s*([\d,]+)/i);
-    const activeDaysMatch = text.match(/Total active days:\s*(\d+)/i);
-    const streakMatch = text.match(/Max streak:\s*(\d+)/i);
-    const easyMatch = text.match(/Easy\s+(\d+)\/\d+/i);
-    const mediumMatch = text.match(/Med\.?\s+(\d+)\/\d+/i);
-    const hardMatch = text.match(/Hard\s+(\d+)\/\d+/i);
-
-    return {
-      ...profiles.leetcode,
-      status: "live",
-      note: `Updated from public LeetCode profile. Rank ${rankMatch?.[1] || "unknown"}.`,
-      limits: baseLimits([
-        "Easy / medium / hard solved split is public.",
-        "Topic-wise solved breakdown is not officially exposed.",
-      ]),
-      breakdown: [
-        { label: "Easy", value: easyMatch?.[1] ? formatNumber(easyMatch[1]) : "0" },
-        { label: "Medium", value: mediumMatch?.[1] ? formatNumber(mediumMatch[1]) : "0" },
-        { label: "Hard", value: hardMatch?.[1] ? formatNumber(hardMatch[1]) : "0" },
-      ],
-      metrics: [
-        { label: "Solved", value: solvedMatch?.[1] ? formatNumber(solvedMatch[1]) : "0" },
-        { label: "Acceptance", value: acceptanceMatch?.[1] ? formatPercent(acceptanceMatch[1]) : "0%" },
-        { label: "Active days", value: activeDaysMatch?.[1] ? formatNumber(activeDaysMatch[1]) : "0" },
-        { label: "Max streak", value: streakMatch?.[1] ? formatNumber(streakMatch[1]) : "0" },
-      ],
-    };
+    return await fetchLeetCodeProfileFromSources();
   } catch (_error) {
     return fallbackProfile(profiles.leetcode, "LeetCode live stats are temporarily unavailable.");
   }
@@ -320,26 +372,7 @@ export const handler = async (event) => {
     ]);
 
     const liveCount = [github, codeforces, leetcode, codechef].filter((profile) => profile.status === "live").length;
-
-    return createResponse(200, {
-      ok: true,
-      status: liveCount === 4 ? "live" : liveCount > 0 ? "partial" : "fallback",
-      updatedAt: new Date().toISOString(),
-      message:
-        liveCount === 4
-          ? "Live analytics loaded from GitHub, Codeforces, LeetCode, and CodeChef."
-          : "Some analytics sources were unavailable, so fallback values are shown where needed.",
-      profiles: {
-        GitHub: github,
-        Codeforces: codeforces,
-        LeetCode: leetcode,
-        CodeChef: codechef,
-      },
-    });
-  } catch (error) {
-    return createResponse(500, {
-      ok: false,
-      status: "error",
+        return await fetchLeetCodeProfileFromSources();
       message: error?.message || "Unable to load live analytics right now.",
     });
   }

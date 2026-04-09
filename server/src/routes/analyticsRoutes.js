@@ -138,6 +138,90 @@ function baseLimits(values) {
   return values.map((item) => ({ label: item }));
 }
 
+function countActiveDays(submissionCalendar) {
+  return Object.values(submissionCalendar || {}).filter((value) => Number(value) > 0).length;
+}
+
+function getLeetCodeFromStatsApi(data) {
+  if (!data || data.status !== "success") {
+    return null;
+  }
+
+  const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
+
+  return {
+    ...profiles.leetcode,
+    status: "live",
+    note: "Updated from LeetCode Stats API, which is more stable than the previous source.",
+    limits: baseLimits([
+      "Easy / medium / hard solved split is public.",
+      "Topic-wise solved breakdown is not exposed by this API.",
+    ]),
+    breakdown: [
+      { label: "Easy", value: formatNumber(data?.easySolved) },
+      { label: "Medium", value: formatNumber(data?.mediumSolved) },
+      { label: "Hard", value: formatNumber(data?.hardSolved) },
+    ],
+    metrics: [
+      { label: "Solved", value: formatNumber(data?.totalSolved) },
+      { label: "Acceptance", value: data?.acceptanceRate != null ? formatPercent(data.acceptanceRate) : "—" },
+      { label: "Active days", value: formatNumber(countActiveDays(submissionCalendar)) },
+      { label: "Rank", value: formatNumber(data?.ranking) },
+    ],
+  };
+}
+
+async function fetchLeetCodeProfileFromSources() {
+  const sources = [
+    "https://leetcode-stats-api.herokuapp.com/Mahfuzar148",
+    "https://leetcode-api-faisalshohag.vercel.app/Mahfuzar148",
+  ];
+
+  let lastError = null;
+
+  for (const source of sources) {
+    try {
+      const data = await fetchJson(source);
+
+      if (source.includes("leetcode-stats-api")) {
+        const profile = getLeetCodeFromStatsApi(data);
+
+        if (profile) {
+          return profile;
+        }
+      }
+
+      const solved = Number(data?.totalSolved || 0);
+      const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
+
+      return {
+        ...profiles.leetcode,
+        status: "live",
+        note: "Updated from a fallback LeetCode public API.",
+        limits: baseLimits([
+          "Easy / medium / hard solved split is public.",
+          "Topic-wise solved breakdown is not exposed by this fallback API.",
+        ]),
+        breakdown: [
+          { label: "Easy", value: formatNumber(data?.easySolved) },
+          { label: "Medium", value: formatNumber(data?.mediumSolved) },
+          { label: "Hard", value: formatNumber(data?.hardSolved) },
+        ],
+        metrics: [
+          { label: "Solved", value: formatNumber(solved) },
+          { label: "Acceptance", value: "—" },
+          { label: "Active days", value: formatNumber(countActiveDays(submissionCalendar)) },
+          { label: "Rank", value: formatNumber(data?.ranking) },
+        ],
+      };
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Unable to load LeetCode data.");
+}
+
 async function fetchGitHubProfile() {
   try {
     const [profileHtml, languages] = await Promise.all([
@@ -211,34 +295,7 @@ async function fetchCodeforcesProfile() {
 
 async function fetchLeetCodeProfile() {
   try {
-    const data = await fetchJson("https://leetcode-api-faisalshohag.vercel.app/Mahfuzar148");
-    const solved = Number(data?.totalSolved || 0);
-    const submissions = Array.isArray(data?.totalSubmissions)
-      ? data.totalSubmissions.find((item) => item.difficulty === "All")?.count || data.totalSubmissions[0]?.count || 0
-      : 0;
-    const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
-    const activeDays = Object.values(submissionCalendar).filter((value) => Number(value) > 0).length;
-
-    return {
-      ...profiles.leetcode,
-      status: "live",
-      note: `Updated from a public LeetCode stats API. Rank ${formatNumber(data?.ranking) || "unknown"}.`,
-      limits: baseLimits([
-        "Easy / medium / hard solved split is public.",
-        "Topic-wise solved breakdown is not exposed by this API.",
-      ]),
-      breakdown: [
-        { label: "Easy", value: formatNumber(data?.easySolved) },
-        { label: "Medium", value: formatNumber(data?.mediumSolved) },
-        { label: "Hard", value: formatNumber(data?.hardSolved) },
-      ],
-      metrics: [
-        { label: "Solved", value: formatNumber(solved) },
-        { label: "Submissions", value: formatNumber(submissions) },
-        { label: "Active days", value: formatNumber(activeDays) },
-        { label: "Rank", value: formatNumber(data?.ranking) },
-      ],
-    };
+    return await fetchLeetCodeProfileFromSources();
   } catch (_error) {
     return fallbackProfile(profiles.leetcode, "LeetCode live stats are temporarily unavailable.");
   }
