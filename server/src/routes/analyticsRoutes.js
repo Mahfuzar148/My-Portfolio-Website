@@ -193,6 +193,35 @@ function buildLeetCodeProfileFromGraphQL(data) {
   };
 }
 
+function buildLeetCodeProfileFromStatsApi(data) {
+  if (!data || data.status !== "success") {
+    return null;
+  }
+
+  const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
+
+  return {
+    ...profiles.leetcode,
+    status: "live",
+    note: "Updated from LeetCode Stats API, which includes acceptance and activity data.",
+    limits: baseLimits([
+      "Easy / medium / hard solved split is public.",
+      "Topic-wise solved breakdown is not exposed by this API.",
+    ]),
+    breakdown: [
+      { label: "Easy", value: formatNumber(data?.easySolved) },
+      { label: "Medium", value: formatNumber(data?.mediumSolved) },
+      { label: "Hard", value: formatNumber(data?.hardSolved) },
+    ],
+    metrics: [
+      { label: "Solved", value: formatNumber(data?.totalSolved) },
+      { label: "Acceptance", value: data?.acceptanceRate != null ? formatPercent(data.acceptanceRate) : "—" },
+      { label: "Active days", value: formatNumber(countActiveDays(submissionCalendar)) },
+      { label: "Rank", value: formatNumber(data?.ranking) },
+    ],
+  };
+}
+
 function getLeetCodeFromStatsApi(data) {
   if (!data || data.status !== "success") {
     return null;
@@ -223,36 +252,9 @@ function getLeetCodeFromStatsApi(data) {
 }
 
 async function fetchLeetCodeProfileFromSources() {
-  try {
-    const graphQLData = await fetchGraphQL(
-      "https://leetcode.com/graphql",
-      `query userProfile($username: String!) {
-        matchedUser(username: $username) {
-          profile {
-            ranking
-          }
-          submitStats {
-            acSubmissionNum {
-              difficulty
-              count
-            }
-          }
-        }
-      }`,
-      { username: profiles.leetcode.username },
-    );
-
-    const graphQLProfile = buildLeetCodeProfileFromGraphQL(graphQLData);
-
-    if (graphQLProfile) {
-      return graphQLProfile;
-    }
-  } catch (error) {
-    // Continue to the fallback stats APIs below.
-  }
-
   const sources = [
     "https://leetcode-stats-api.herokuapp.com/Mahfuzar148",
+    "https://leetcode.com/graphql",
     "https://leetcode-api-faisalshohag.vercel.app/Mahfuzar148",
   ];
 
@@ -260,39 +262,47 @@ async function fetchLeetCodeProfileFromSources() {
 
   for (const source of sources) {
     try {
-      const data = await fetchJson(source);
+      const data = source.includes("graphql")
+        ? await fetchGraphQL(
+            source,
+            `query userProfile($username: String!) {
+              matchedUser(username: $username) {
+                profile {
+                  ranking
+                }
+                submitStats {
+                  acSubmissionNum {
+                    difficulty
+                    count
+                  }
+                }
+              }
+            }`,
+            { username: profiles.leetcode.username },
+          )
+        : await fetchJson(source);
 
       if (source.includes("leetcode-stats-api")) {
-        const profile = getLeetCodeFromStatsApi(data);
+        const profile = buildLeetCodeProfileFromStatsApi(data);
 
         if (profile) {
           return profile;
         }
       }
 
-      const solved = Number(data?.totalSolved || 0);
-      const submissionCalendar = data?.submissionCalendar && typeof data.submissionCalendar === "object" ? data.submissionCalendar : {};
+      if (source.includes("graphql")) {
+        const profile = buildLeetCodeProfileFromGraphQL(data);
 
-      return {
-        ...profiles.leetcode,
-        status: "live",
-        note: "Updated from a fallback LeetCode public API.",
-        limits: baseLimits([
-          "Easy / medium / hard solved split is public.",
-          "Topic-wise solved breakdown is not exposed by this fallback API.",
-        ]),
-        breakdown: [
-          { label: "Easy", value: formatNumber(data?.easySolved) },
-          { label: "Medium", value: formatNumber(data?.mediumSolved) },
-          { label: "Hard", value: formatNumber(data?.hardSolved) },
-        ],
-        metrics: [
-          { label: "Solved", value: formatNumber(solved) },
-          { label: "Acceptance", value: "—" },
-          { label: "Active days", value: formatNumber(countActiveDays(submissionCalendar)) },
-          { label: "Rank", value: formatNumber(data?.ranking) },
-        ],
-      };
+        if (profile) {
+          return profile;
+        }
+      }
+
+      const profile = buildLeetCodeProfileFromStatsApi(data);
+
+      if (profile) {
+        return profile;
+      }
     } catch (error) {
       lastError = error;
     }
