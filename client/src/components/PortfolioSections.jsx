@@ -1,9 +1,13 @@
 import SectionHeading from "./SectionHeading.jsx";
-import { ContactIcon } from "./Icons.jsx";
+import { CodingPlatformIcon, ContactIcon } from "./Icons.jsx";
 
 function PortfolioSections({
   skillAnalytics,
   skillFocus,
+  codingProfiles,
+  codingAnalyticsState,
+  activeCodingPlatform,
+  onSelectCodingPlatform,
   achievements,
   workflow,
   services,
@@ -16,6 +20,23 @@ function PortfolioSections({
   onSubmit,
   onCopy,
 }) {
+  const liveCodingProfiles = codingProfiles.filter((profile) => profile.status === "live");
+  const activeProfile = liveCodingProfiles.find((profile) => profile.platform === activeCodingPlatform) || liveCodingProfiles[0];
+
+  const ratingGraph = activeProfile?.recentRatings || [];
+
+  const ratingBounds = ratingGraph.length
+    ? ratingGraph.reduce(
+        (bounds, item) => ({
+          min: Math.min(bounds.min, item.rating),
+          max: Math.max(bounds.max, item.rating),
+        }),
+        { min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY },
+      )
+    : null;
+
+  const ratingSpan = ratingBounds ? Math.max(1, ratingBounds.max - ratingBounds.min) : 1;
+
   return (
     <div className="main-panel">
       <section className="content-block" id="about">
@@ -92,6 +113,169 @@ function PortfolioSections({
               </div>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section className="content-block" id="coding-profiles">
+        <SectionHeading
+          eyebrow="Coding Profiles"
+          title="Live analytics in separate platform pages"
+          description="Only the platforms with successfully fetched public data are shown here."
+        />
+        <div className="coding-shell">
+          <aside className="glass-card coding-rail" aria-label="Coding platform pages">
+            <div className="coding-summary-card">
+              <h3>Platform pages</h3>
+              <p>Showing only live public data. Unavailable platforms stay hidden.</p>
+              <div className="coding-section-meta">
+                <span className={`coding-section-status ${codingAnalyticsState?.status === "live" ? "live" : "loading"}`}>
+                  {codingAnalyticsState?.status === "live" ? "Live" : "Loading"}
+                </span>
+                {codingAnalyticsState?.updatedAt ? (
+                  <small>Last sync: {new Date(codingAnalyticsState.updatedAt).toLocaleString()}</small>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="coding-tab-list">
+              {liveCodingProfiles.map((profile) => {
+                const isActive = profile.platform === activeProfile?.platform;
+
+                return (
+                  <button
+                    type="button"
+                    key={profile.platform}
+                    className={`coding-tab ${isActive ? "active" : ""}`}
+                    onClick={() => onSelectCodingPlatform(profile.platform)}
+                  >
+                    <span className="coding-tab-icon">
+                      <CodingPlatformIcon type={profile.icon} />
+                    </span>
+                    <span className="coding-tab-copy">
+                      <strong>{profile.platform}</strong>
+                      <small>{profile.username}</small>
+                    </span>
+                    <span className="coding-tab-hint">{isActive ? "Open page" : "Switch"}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </aside>
+
+          {activeProfile ? (
+            <article className="glass-card coding-page">
+              <div className="coding-page-header">
+                <div className="coding-page-title">
+                  <div className="coding-profile-topline">
+                    <span className="coding-profile-platform">{activeProfile.platform}</span>
+                    <span className={`coding-profile-status ${activeProfile.status}`}>Live</span>
+                  </div>
+                  <h3>{activeProfile.username}</h3>
+                  <p>{activeProfile.description}</p>
+                </div>
+
+                <div className="coding-page-actions">
+                  <a href={activeProfile.href} target="_blank" rel="noreferrer" className="coding-profile-link">
+                    Open profile
+                  </a>
+                  <a href={`#coding/${encodeURIComponent(activeProfile.platform.toLowerCase())}`} className="coding-profile-link secondary">
+                    Copyable page link
+                  </a>
+                </div>
+              </div>
+
+              <div className="coding-page-grid">
+                <div className="coding-page-main">
+                  <div className="coding-metric-grid">
+                    {activeProfile.metrics.map((metric) => (
+                      <div key={metric.label}>
+                        <strong>{metric.value}</strong>
+                        <span>{metric.label}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {activeProfile.languages?.length ? (
+                    <div className="coding-language-card">
+                      <div className="coding-mini-title">
+                        <h4>GitHub language share</h4>
+                        <small>Repo-based percentage from public metadata</small>
+                      </div>
+                      <div className="coding-language-list">
+                        {activeProfile.languages.map((language) => (
+                          <div className="coding-language-row" key={language.label}>
+                            <div className="coding-language-row-top">
+                              <strong>{language.label}</strong>
+                              <span>{language.percent}%</span>
+                            </div>
+                            <div className="skill-bar-track" aria-hidden="true">
+                              <span className="skill-bar-fill" style={{ width: `${language.percent}%` }} />
+                            </div>
+                            <small>{language.count} repos</small>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {activeProfile.breakdown?.length ? (
+                    <div className="coding-language-card">
+                      <div className="coding-mini-title">
+                        <h4>Solved by difficulty</h4>
+                        <small>Only public difficulty buckets are shown</small>
+                      </div>
+                      <div className="coding-difficulty-grid">
+                        {activeProfile.breakdown.map((entry) => (
+                          <div key={entry.label}>
+                            <strong>{entry.value}</strong>
+                            <span>{entry.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {ratingGraph.length ? (
+                    <div className="coding-language-card">
+                      <div className="coding-mini-title">
+                        <h4>Recent rating trend</h4>
+                        <small>Latest rated contests from the public API</small>
+                      </div>
+                      <div className="coding-trend-chart">
+                        {ratingGraph.map((entry) => {
+                          const height = ratingBounds
+                            ? 18 + ((entry.rating - ratingBounds.min) / ratingSpan) * 82
+                            : 50;
+
+                          return (
+                            <div className="coding-trend-bar" key={`${entry.contest}-${entry.time}`}>
+                              <div className="coding-trend-bar-shell" aria-hidden="true">
+                                <span style={{ height: `${height}%` }} />
+                              </div>
+                              <strong>{entry.rating}</strong>
+                              <small>{entry.contest}</small>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="coding-page-side">
+                  <div className="coding-limit-card coding-side-note">
+                    <h4>What this page shows</h4>
+                    <p>
+                      This page uses public data only. If a platform does not expose a field publicly,
+                      it stays hidden.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="coding-profile-note">{activeProfile.note}</p>
+            </article>
+          ) : null}
         </div>
       </section>
 

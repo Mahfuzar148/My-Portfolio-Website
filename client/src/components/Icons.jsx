@@ -55,6 +55,14 @@ export function SidebarIcon({ type }) {
     );
   }
 
+  if (type === "code") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m8.7 16.3-4.6-4.3 4.6-4.3L7.3 6.3 1.9 12l5.4 5.7 1.4-1.4Zm6.6 0 1.4 1.4 5.4-5.7-5.4-5.7-1.4 1.4 4.6 4.3-4.6 4.3ZM14.6 4l-3.2 16h-2L12.6 4h2Z" />
+      </svg>
+    );
+  }
+
   if (type === "project") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -70,6 +78,47 @@ export function SidebarIcon({ type }) {
       </svg>
     );
   }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 5h16v14H4V5Zm2 2v10h12V7H6Zm2 2h8v2H8V9Zm0 4h5v2H8v-2Z" />
+    </svg>
+  );
+}
+
+export function CodingPlatformIcon({ type }) {
+  if (type === "github") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.68c-2.78.61-3.37-1.19-3.37-1.19-.46-1.17-1.12-1.48-1.12-1.48-.92-.63.07-.62.07-.62 1.02.07 1.56 1.05 1.56 1.05.9 1.55 2.37 1.1 2.95.84.09-.66.35-1.1.64-1.35-2.22-.26-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.3.1-2.72 0 0 .84-.27 2.75 1.03a9.56 9.56 0 0 1 5 0c1.9-1.3 2.74-1.03 2.74-1.03.55 1.42.2 2.46.1 2.72.64.7 1.03 1.59 1.03 2.68 0 3.85-2.35 4.68-4.58 4.93.36.32.68.94.68 1.9v2.81c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
+      </svg>
+    );
+  }
+
+  if (type === "codeforces") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 18h3V8H4v10Zm6 0h3V4h-3v14Zm6 0h3v-7h-3v7Z" />
+      </svg>
+    );
+  }
+
+  if (type === "leetcode") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2 5 9v6l7 7 2.1-2.1-5.9-5.9V10l5.8-5.8L12 2Zm2.9 5.1L18.8 5 20 6.2l-3.9 4.7L20 15.8 18.8 17l-3.9-2.1L12.6 12l2.3-4.9Z" />
+      </svg>
+    );
+  }
+
+  if (type === "codechef") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 4h10v4h3v12H4V8h3V4Zm2 2v2h6V6H9Zm-3 4v8h12v-8H6Zm2 2h8v2H8v-2Z" />
+      </svg>
+    );
+  }
+
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">

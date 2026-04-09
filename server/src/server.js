@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 import portfolioRoutes from "./routes/portfolioRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 
@@ -22,6 +23,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/portfolio", portfolioRoutes);
+app.use("/api/analytics", analyticsRoutes);
 app.use("/api/contact", contactRoutes);
 
 app.listen(port, () => {

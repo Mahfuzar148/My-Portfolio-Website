@@ -121,6 +121,61 @@ export const services = [
   },
 ];
 
+export const codingProfiles = [
+  {
+    platform: "GitHub",
+    icon: "github",
+    username: "Mahfuzar148",
+    href: "https://github.com/Mahfuzar148",
+    description: "Repository activity, contribution graph, and open-source footprint.",
+    metrics: [
+      { label: "Profile", value: "GitHub" },
+      { label: "Data", value: "Ready" },
+      { label: "View", value: "Graph" },
+    ],
+    note: "Best source for contribution heatmap, language stats, and repository trends.",
+  },
+  {
+    platform: "Codeforces",
+    icon: "codeforces",
+    username: "mahfuzar148",
+    href: "https://codeforces.com/profile/mahfuzar148",
+    description: "Contest rating, solved count, and performance over time.",
+    metrics: [
+      { label: "Profile", value: "Codeforces" },
+      { label: "Handle", value: "mahfuzar148" },
+      { label: "View", value: "Rating" },
+    ],
+    note: "Use this profile to surface contest rating, solved count, and performance history.",
+  },
+  {
+    platform: "LeetCode",
+    icon: "leetcode",
+    username: "Mahfuzar148",
+    href: "https://leetcode.com/u/Mahfuzar148/",
+    description: "Problem-solving progress, contest history, and topic balance.",
+    metrics: [
+      { label: "Profile", value: "LeetCode" },
+      { label: "Handle", value: "Mahfuzar148" },
+      { label: "View", value: "Stats" },
+    ],
+    note: "Use this profile to show solved counts, streaks, and contest records.",
+  },
+  {
+    platform: "CodeChef",
+    icon: "codechef",
+    username: "mahfuzar148",
+    href: "https://www.codechef.com/users/mahfuzar148",
+    description: "Long-form contest performance and competitive programming consistency.",
+    metrics: [
+      { label: "Profile", value: "CodeChef" },
+      { label: "Handle", value: "mahfuzar148" },
+      { label: "View", value: "Rank" },
+    ],
+    note: "Use this profile to surface rating, stars, and contest progress.",
+  },
+];
+
 export const timeline = [
   {
     year: "Current",
@@ -182,6 +237,7 @@ export const navigationItems = [
   { label: "Home", href: "#home", icon: "home" },
   { label: "About", href: "#about", icon: "user" },
   { label: "Skills", href: "#skills", icon: "skills" },
+  { label: "Coding Profiles", href: "#coding-profiles", icon: "code" },
   { label: "Projects", href: "#projects", icon: "project" },
   { label: "Experience", href: "#experience", icon: "timeline" },
   { label: "Contact", href: "#contact", icon: "mail" },
