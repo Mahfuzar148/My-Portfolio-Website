@@ -141,28 +141,31 @@ function App() {
     };
   }, []);
 
-  const liveCodingProfiles = codingProfiles.filter((profile) => codingAnalytics.profiles?.[profile.platform]?.status === "live");
-
   const mergedCodingProfiles = codingProfiles.map((profile) => {
     const liveProfile = codingAnalytics.profiles?.[profile.platform];
 
     return liveProfile ? { ...profile, ...liveProfile } : profile;
   });
 
+  const visibleCodingProfiles = mergedCodingProfiles.filter(
+    (profile) => profile.status === "live" || profile.platform === "LeetCode",
+  );
+
   useEffect(() => {
-    if (!liveCodingProfiles.length) {
+    if (!visibleCodingProfiles.length) {
       return;
     }
 
-    const activeIsVisible = liveCodingProfiles.some((profile) => profile.platform === activeCodingPlatform);
+    const activeIsVisible = visibleCodingProfiles.some((profile) => profile.platform === activeCodingPlatform);
 
     if (!activeIsVisible) {
-      setActiveCodingPlatform(liveCodingProfiles[0].platform);
+      const preferredPlatform = visibleCodingProfiles.find((profile) => profile.platform !== "LeetCode")?.platform;
+      setActiveCodingPlatform(preferredPlatform || visibleCodingProfiles[0].platform);
     }
-  }, [activeCodingPlatform, liveCodingProfiles]);
+  }, [activeCodingPlatform, visibleCodingProfiles]);
 
   const handleSelectCodingPlatform = (platform) => {
-    if (!liveCodingProfiles.some((profile) => profile.platform === platform)) {
+    if (!visibleCodingProfiles.some((profile) => profile.platform === platform)) {
       return;
     }
 
