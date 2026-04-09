@@ -59,6 +59,26 @@ async function fetchJson(url) {
   return response.json();
 }
 
+async function fetchGraphQL(url, query, variables) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "User-Agent": "Mozilla/5.0",
+      Referer: "https://leetcode.com",
+      Origin: "https://leetcode.com",
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+
+  return response.json();
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: {
@@ -147,6 +167,37 @@ function baseLimits(values) {
   return values.map((item) => ({ label: item }));
 }
 
+function buildLeetCodeProfileFromGraphQL(data) {
+  const matchedUser = data?.data?.matchedUser;
+  const submissions = matchedUser?.submitStats?.acSubmissionNum || [];
+  const byDifficulty = new Map(submissions.map((entry) => [entry.difficulty, Number(entry.count || 0)]));
+
+  if (!matchedUser) {
+    return null;
+  }
+
+  return {
+    ...profiles.leetcode,
+    status: "live",
+    note: "Updated from LeetCode GraphQL, which is the most direct public source.",
+    limits: baseLimits([
+      "Problem counts are public through GraphQL.",
+      "Topic-wise solved breakdown is not exposed by this source.",
+    ]),
+    breakdown: [
+      { label: "Easy", value: formatNumber(byDifficulty.get("Easy")) },
+      { label: "Medium", value: formatNumber(byDifficulty.get("Medium")) },
+      { label: "Hard", value: formatNumber(byDifficulty.get("Hard")) },
+    ],
+    metrics: [
+      { label: "Solved", value: formatNumber(byDifficulty.get("All")) },
+      { label: "Acceptance", value: "—" },
+      { label: "Active days", value: "—" },
+      { label: "Rank", value: formatNumber(matchedUser?.profile?.ranking) },
+    ],
+  };
+}
+
 function countActiveDays(submissionCalendar) {
   return Object.values(submissionCalendar || {}).filter((value) => Number(value) > 0).length;
 }
@@ -181,6 +232,34 @@ function getLeetCodeFromStatsApi(data) {
 }
 
 async function fetchLeetCodeProfileFromSources() {
+  try {
+    const graphQLData = await fetchGraphQL(
+      "https://leetcode.com/graphql",
+      `query userProfile($username: String!) {
+        matchedUser(username: $username) {
+          profile {
+            ranking
+          }
+          submitStats {
+            acSubmissionNum {
+              difficulty
+              count
+            }
+          }
+        }
+      }`,
+      { username: profiles.leetcode.username },
+    );
+
+    const graphQLProfile = buildLeetCodeProfileFromGraphQL(graphQLData);
+
+    if (graphQLProfile) {
+      return graphQLProfile;
+    }
+  } catch (error) {
+    // Continue to the fallback stats APIs below.
+  }
+
   const sources = [
     "https://leetcode-stats-api.herokuapp.com/Mahfuzar148",
     "https://leetcode-api-faisalshohag.vercel.app/Mahfuzar148",
