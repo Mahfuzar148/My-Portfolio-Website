@@ -462,7 +462,25 @@ export const handler = async (event) => {
     ]);
 
     const liveCount = [github, codeforces, leetcode, codechef].filter((profile) => profile.status === "live").length;
-        return await fetchLeetCodeProfileFromSources();
+    return createResponse(200, {
+      ok: true,
+      status: liveCount === 4 ? "live" : liveCount > 0 ? "partial" : "fallback",
+      updatedAt: new Date().toISOString(),
+      message:
+        liveCount === 4
+          ? "Live analytics loaded from GitHub, Codeforces, LeetCode, and CodeChef."
+          : "Some analytics sources were unavailable, so fallback values are shown where needed.",
+      profiles: {
+        GitHub: github,
+        Codeforces: codeforces,
+        LeetCode: leetcode,
+        CodeChef: codechef,
+      },
+    });
+  } catch (error) {
+    return createResponse(500, {
+      ok: false,
+      status: "error",
       message: error?.message || "Unable to load live analytics right now.",
     });
   }
